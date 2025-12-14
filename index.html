@@ -106,7 +106,7 @@
   <p>DOOD • VIDEE • VDAQ / VDQ — tanpa iklan & redirect</p>
 
   <input id="link" placeholder="Tempel link video di sini">
-  <button onclick="download()">Download Video</button>
+  <button onclick="copyLink()">Copy Link Video</button>
 
   <div class="player" id="playerBox">
     <iframe id="player" allowfullscreen></iframe>
@@ -123,39 +123,22 @@
 </div>
 
 <script>
-function download() {
-  const url = document.getElementById("link").value.trim();
+function copyLink() {
+  const input = document.getElementById("link");
   const info = document.getElementById("info");
+  const url = input.value.trim();
 
   if (!url) return;
 
-  info.style.display = "none";
-
-  const blockedDomains = [
-    "vide14.com",
-    "vdaq",
-    "vdq",
-    "token",
-    "path="
-  ];
-
-  const isBlocked = blockedDomains.some(d => url.includes(d));
-
-  // Jika domain biasanya menolak download
-  if (isBlocked) {
+  navigator.clipboard.writeText(url).then(() => {
     info.style.display = "block";
-    info.innerText = "Server melindungi file. Membuka halaman download asli...";
-    window.open(url, "_blank", "noopener,noreferrer");
-    return;
-  }
-
-  // Coba download langsung
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+    info.innerText = "Link berhasil disalin. Tempel di 1DM / ADM / IDM.";
+  }).catch(() => {
+    input.select();
+    document.execCommand("copy");
+    info.style.display = "block";
+    info.innerText = "Link disalin. Tempel di download manager.";
+  });
 }
 </script>
 
