@@ -131,26 +131,28 @@ function play() {
 
   if (!url) return;
 
-  // Reset
   playerBox.style.display = "none";
   info.style.display = "none";
   player.src = "";
 
-  // Deteksi link yang biasanya PROTECTED / CRYPT
-  const isCrypt =
-    url.includes("vdaq") ||
-    url.includes("vdq") ||
-    url.includes("encrypt") ||
-    url.includes("token");
+  // DOMAIN YANG TIDAK BISA IFRAME
+  const blockedDomains = [
+    "vide14.com",
+    "vdaq",
+    "vdq",
+    "token",
+    "path="
+  ];
 
-  if (isCrypt) {
-    // Mode aman: buka langsung player asli
+  const isBlocked = blockedDomains.some(d => url.includes(d));
+
+  if (isBlocked) {
     info.style.display = "block";
-    window.open(url, "_blank");
+    window.open(url, "_blank", "noopener,noreferrer");
     return;
   }
 
-  // Mode embed normal (DOOD / VIDEE / link bebas)
+  // Hanya embed jika benar-benar boleh
   player.src = url;
   playerBox.style.display = "block";
 }
