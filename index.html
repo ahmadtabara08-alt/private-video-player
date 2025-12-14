@@ -106,14 +106,14 @@
   <p>DOOD • VIDEE • VDAQ / VDQ — tanpa iklan & redirect</p>
 
   <input id="link" placeholder="Tempel link video di sini">
-  <button onclick="play()">Play Video</button>
+  <button onclick="download()">Download Video</button>
 
   <div class="player" id="playerBox">
     <iframe id="player" allowfullscreen></iframe>
   </div>
 
   <div class="info" id="info">
-    Video ini dilindungi (crypt). Dibuka di tab baru.
+  Server melindungi file. Dialihkan ke halaman download asli.
   </div>
 
   <div class="note">
@@ -123,19 +123,14 @@
 </div>
 
 <script>
-function play() {
+function download() {
   const url = document.getElementById("link").value.trim();
-  const playerBox = document.getElementById("playerBox");
-  const player = document.getElementById("player");
   const info = document.getElementById("info");
 
   if (!url) return;
 
-  playerBox.style.display = "none";
   info.style.display = "none";
-  player.src = "";
 
-  // DOMAIN YANG TIDAK BISA IFRAME
   const blockedDomains = [
     "vide14.com",
     "vdaq",
@@ -146,15 +141,21 @@ function play() {
 
   const isBlocked = blockedDomains.some(d => url.includes(d));
 
+  // Jika domain biasanya menolak download
   if (isBlocked) {
     info.style.display = "block";
+    info.innerText = "Server melindungi file. Membuka halaman download asli...";
     window.open(url, "_blank", "noopener,noreferrer");
     return;
   }
 
-  // Hanya embed jika benar-benar boleh
-  player.src = url;
-  playerBox.style.display = "block";
+  // Coba download langsung
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 </script>
 
